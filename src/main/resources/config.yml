@@ -1,0 +1,65 @@
+#Developed by _ItsAndrew_
+#This is the main config for NovaWarps
+
+prefix: "&5&l[&b&lNW&5&l]" #This is the main prefix that appears in chat
+toggle-permissions: true #Whether you want to use permissions for warps or not (true/false)
+toggle-cooldowns: true #Whether you want to have a cooldown after a player warps (true/false)
+cooldown: 1m #s-seconds; m-minutes; h-hours; d-days
+
+#GUI Configuration
+gui-rows: 6 #The number should be between 1 and 6 (each inventory row has 9 slots => minimum slots = 9; maximum slots = 54)
+gui-title: "Warps" #You can use '&' styles
+exit-item:
+  toggle: true #If you want this button in the GUI or not (true/false)
+  material: red_concrete #In minecraft, hover over an item, and you will see "minecraft:..." You need to write what's after "minecraft:"
+  slot: 40
+  display-name: "&c&lEXIT"
+
+#Configure all the sounds you may use (leave "" for none). To see all sounds, go in minecraft and run /playsound ... That way you can actually check the name AND hear the sound
+#For volume, the default value is 1. For pitch, the default value is 1.
+no-permission-sound: "entity.villager.no"
+no-permission-sound-volume: 1
+no-permission-sound-pitch: 1
+no-permission-chat-message: " &cYou don't have permission to use this warp!"
+no-permission-lore: "&c&lNO PERMISSION" #This is the lore that appears on a warp item if the player doesn't have permission
+
+open-warps-gui-sound: "entity.experience_orb.pickup"
+open-warps-gui-sound-volume: 1
+open-warps-gui-sound-pitch: 1
+
+player-has-cooldown-sound: "entity.villager.no"
+player-has-cooldown-sound-volume: 1
+player-has-cooldown-sound-pitch: 1
+
+player-moved-sound: "block.note_block.pling"
+player-moved-sound-pitch: 0.6
+player-moved-sound-volume: 1
+
+task-in-progress-sound: "block.note_block.harp"
+task-in-progress-sound-volume: 1.3
+task-in-progress-sound-pitch: 1
+
+exit-button-sound: "ui.button.click"
+exit-button-sound-volume: 1
+exit-button-sound-pitch: 1
+
+player-warped-sound: "entity.wither.ambient"
+player-warped-sound-volume: 1
+player-warped-sound-pitch: 0.4
+player-warped-title: "&a&lWarped Successfully!"
+player-warped-successfully-message: " &aWarped successfully!"
+
+#Configure everything during the WARP TASK
+task-active-title-style: "&a&l" #This is only for style, the title will be the seconds left to run the task
+task-active-subtitle: "&c&lDO NOT MOVE!"
+
+player-moved-title: "&cWARP CANCELED!"
+player-moved-subtitle: ""
+player-moved-message: " &cYou moved! Do &l/warps &cand try again!"
+
+task-timer: 5 #seconds
+
+#HELP MESSAGE when a staff runs /warpconfig help
+help-message:
+  - "&5=========&l[&b&lNovaWarps HELP&5&l]&5========="
+  - ""

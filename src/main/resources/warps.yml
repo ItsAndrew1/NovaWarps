@@ -1,0 +1,21 @@
+#Developed by _ItsAndrew_
+#This file is for configuring the warps you may create
+
+#Example Structure:
+#warps:
+#  warp1:
+#    location:
+#       x: ...
+#       y: ...
+#       z: ...
+#    gui-item: ender_pearl
+#    gui-slot: 13
+#    gui-title: &aWarp1
+#    permission: warps.vip
+#    enchant-glint: (true/false)
+#    lore: -> You cannot modify this from in-game!!
+#      - ... (You can use '&' styles)
+#      - ...
+#    world: world
+
+warps:

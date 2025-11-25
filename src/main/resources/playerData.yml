@@ -1,0 +1,5 @@
+#Developed by _ItsAndrew_
+#This file is for getting the player's cooldowns. It is advised NOT to modify anything here.
+#If the value of "toggle-cooldowns" in config.yml is false, this file WILL NOT be used.
+
+players:

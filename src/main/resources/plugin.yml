@@ -1,0 +1,25 @@
+name: NovaWarps
+version: '1.0'
+main: org.andrew.novaWarps.NovaWarps
+api-version: '1.21'
+author: _ItsAndrew_
+description: Create different warps for your server!
+
+permissions:
+  warps.admin:
+    description: Allows the admins to access configuration commands
+    default: op
+
+  warps.use:
+    description: Allows players to access the GUI and use the warps
+    default: true
+
+commands:
+  warpconfig:
+    aliases: [wc]
+    description: Manage all the configuration commands
+    permission: warps.admin
+
+  warps:
+    description: Opens the Warps GUI
+    permission: warps.use
