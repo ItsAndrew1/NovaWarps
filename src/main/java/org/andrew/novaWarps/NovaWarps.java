@@ -73,8 +73,10 @@ public final class NovaWarps extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        //Saves the config files
         saveConfig();
         getWarps().saveConfig();
+        playerData.saveConfig();
 
         Bukkit.getLogger().info("[NW] NovaWarps disabled successfully!");
     }

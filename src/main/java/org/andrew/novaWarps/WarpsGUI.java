@@ -17,8 +17,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class WarpsGUI implements Listener {
     NovaWarps plugin;
@@ -28,6 +26,7 @@ public class WarpsGUI implements Listener {
         this.plugin = plugin;
     }
 
+    //Shows the GUI to the player
     public void showGUI(Player player){
         FileConfiguration warps = plugin.getWarps().getConfig();
         String chatPrefix = plugin.getConfig().getString("prefix");
@@ -35,12 +34,15 @@ public class WarpsGUI implements Listener {
         String guiTitle = ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("gui-title")));
         boolean exitItemToggle = plugin.getConfig().getBoolean("exit-item.toggle");
 
+        //If there aren't any warps configured, sends a message to the player
         if(!warps.isConfigurationSection("warps")){
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', chatPrefix+" &cThere are no warps configured. Contact the server administrators about this!"));
             return;
         }
 
         Inventory gui = Bukkit.createInventory(null, plugin.getGuiSize(), guiTitle);
+
+        //Shows the exitItem if exit-item.toggle is true
         if(exitItemToggle){
             String stringExitItemMaterial = plugin.getConfig().getString("exit-item.material");
             Material exitItemMaterial = Material.matchMaterial(stringExitItemMaterial.toUpperCase());
@@ -72,6 +74,7 @@ public class WarpsGUI implements Listener {
                 ItemStack guiWarp = new ItemStack(guiWarpMaterial);
                 ItemMeta guiWarpMeta = guiWarp.getItemMeta();
 
+                //If the enchant-glint of a warp is true, it shows it on the item
                 String toggleEnchantGlint = warps.getString("warps."+warp+".enchant-glint");
                 if(toggleEnchantGlint.equalsIgnoreCase("true")){
                     guiWarpMeta.addEnchant(Enchantment.LURE, 1, true);
@@ -108,6 +111,7 @@ public class WarpsGUI implements Listener {
                 guiWarp.setItemMeta(guiWarpMeta);
                 gui.setItem(guiWarpSlot, guiWarp);
             }
+          //Displays any errors in the server console
         } catch (Exception e){
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', chatPrefix+" &cError! Contact the server administrators about this."));
             Bukkit.getLogger().warning(e.getMessage());
@@ -218,7 +222,7 @@ public class WarpsGUI implements Listener {
                             Sound truePlayerMovedSound = Registry.SOUNDS.get(checkPlayerMovedSound);
 
                             player.sendTitle(playerMovedTitle, playerMovedSubtitle);
-                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix+playerMovedChatMessage));
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', playerMovedChatMessage));
                             player.playSound(player.getLocation(), truePlayerMovedSound, PlayerMovedSoundVolume, PlayerMovedSoundPitch);
 
                             task.cancel();
@@ -234,11 +238,12 @@ public class WarpsGUI implements Listener {
                         NamespacedKey checkTaskActiveSound = NamespacedKey.minecraft(taskActiveSound);
                         Sound trueTaskActiveSound = Registry.SOUNDS.get(checkTaskActiveSound);
 
+                        //If the second is 0
                         if(second[0] == 0){
                             World world = Bukkit.getWorld(Objects.requireNonNull(warps.getString(mainPath + ".world")));
                             if(world == null){
                                 Bukkit.getLogger().info("[NW] World invalid for warp "+warp+"!");
-                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix+" &cThere is a problem. Contact the server administrators about this"));
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cThere is a problem. Contact the server administrators about this"));
                                 return;
                             }
 
@@ -247,12 +252,12 @@ public class WarpsGUI implements Listener {
                                 plugin.getCooldownManager().startCooldown(player);
                             }
 
+                            //Information for the sound of playerWarped
                             String playerWarpedSoundString = plugin.getConfig().getString("player-warped-sound");
                             float playerWarpedSoundVolume = plugin.getConfig().getInt("player-warped-sound-volume");
                             float playerWarpedSoundPitch = plugin.getConfig().getInt("player-warped-sound-pitch");
                             NamespacedKey checkPlayerWarpedSound = NamespacedKey.minecraft(playerWarpedSoundString.toLowerCase());
                             Sound playerWarpedSound = Registry.SOUNDS.get(checkPlayerWarpedSound);
-
 
                             Location teleportLocation = new Location(world, locationX, locationY, locationZ);
                             player.playSound(player.getLocation(), playerWarpedSound, playerWarpedSoundVolume, playerWarpedSoundPitch);
