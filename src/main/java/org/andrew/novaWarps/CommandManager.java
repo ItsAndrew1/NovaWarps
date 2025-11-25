@@ -254,7 +254,7 @@ public class CommandManager implements CommandExecutor {
 
         if(command.getName().equalsIgnoreCase("warps")){
             if(!sender.hasPermission("warps.use")){
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix+" &cYou don't have permission to run this command."));
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou don't have permission to run this command."));
                 return true;
             }
             plugin.getGuiManager().showGUI(player);

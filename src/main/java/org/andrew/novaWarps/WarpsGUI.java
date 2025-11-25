@@ -180,7 +180,7 @@ public class WarpsGUI implements Listener {
                         NamespacedKey checkNoPermissionSound = NamespacedKey.minecraft(noPermissionSoundString);
                         Sound noPermissionSound = Registry.SOUNDS.get(checkNoPermissionSound);
 
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix+noPermissionChatMessage));
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', noPermissionChatMessage));
                         player.playSound(player.getLocation(), noPermissionSound, noPermissionSoundVolume, noPermissionSoundPitch);
                         player.closeInventory();
                         return;
@@ -200,7 +200,7 @@ public class WarpsGUI implements Listener {
                         Sound playerHasCooldownSound = Registry.SOUNDS.get(checkPlayerHasCooldownSound);
 
                         player.playSound(player.getLocation(), playerHasCooldownSound, playerHasCooldownSoundVolume, playerHasCooldownSoundPitch);
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix+" &cYou still have a cooldown of &l"+remainingCooldownString+"&c!"));
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou still have a cooldown of &l"+remainingCooldownString+"&c!"));
                         player.closeInventory();
                         return;
                     }

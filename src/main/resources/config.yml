@@ -4,7 +4,7 @@
 prefix: "&5&l[&b&lNW&5&l]" #This is the main prefix that appears in chat
 toggle-permissions: true #Whether you want to use permissions for warps or not (true/false)
 toggle-cooldowns: true #Whether you want to have a cooldown after a player warps (true/false)
-cooldown: 1m #s-seconds; m-minutes; h-hours; d-days
+cooldown: 5m #s-seconds; m-minutes; h-hours; d-days
 
 #GUI Configuration
 gui-rows: 6 #The number should be between 1 and 6 (each inventory row has 9 slots => minimum slots = 9; maximum slots = 54)
@@ -20,7 +20,7 @@ exit-item:
 no-permission-sound: "entity.villager.no"
 no-permission-sound-volume: 1
 no-permission-sound-pitch: 1
-no-permission-chat-message: " &cYou don't have permission to use this warp!"
+no-permission-chat-message: "&cYou don't have permission to use this warp!"
 no-permission-lore: "&c&lNO PERMISSION" #This is the lore that appears on a warp item if the player doesn't have permission
 
 open-warps-gui-sound: "entity.experience_orb.pickup"
