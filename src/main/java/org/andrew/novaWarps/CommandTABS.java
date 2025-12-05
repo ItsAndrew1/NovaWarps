@@ -4,6 +4,7 @@ package org.andrew.novaWarps;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,21 +21,43 @@ public class CommandTABS implements TabCompleter {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String labels, @NotNull String[] args){
-        FileConfiguration warps = plugin.getWarps().getConfig();
+        FileConfiguration warpsFile = plugin.getWarps().getConfig();
 
         if(command.getName().equalsIgnoreCase("warpconfig")){
             if(args.length == 1){
                 return Arrays.asList("create", "delete", "manage", "reload", "help");
             }
-            if(args.length == 2 && args[0].equalsIgnoreCase("manage")){
-                if(!warps.isConfigurationSection("warps")){
+
+            //Displays the warps for /wc delete command
+            if(args.length == 2 && args[1].equalsIgnoreCase("delete")){
+                //Checking if there are any warps
+                ConfigurationSection warps = warpsFile.getConfigurationSection("warps");
+                if(warps == null || warps.getKeys(false).isEmpty()){
                     return Collections.emptyList();
                 }
-                Set<String> keys = warps.getConfigurationSection("warps").getKeys(false);
-                return new ArrayList<>(keys);
+
+                Set<String> Warps = warps.getKeys(false);
+                return new ArrayList<>(Warps);
             }
+
+            //Displays the warps for /wc manage command
+            if(args.length == 2 && args[0].equalsIgnoreCase("manage")){
+                //Checking if there are any warps configured
+                ConfigurationSection warps = warpsFile.getConfigurationSection("warps");
+                if(warps == null || warps.getKeys(false).isEmpty()){
+                    return Collections.emptyList();
+                }
+
+                Set<String> Warps = warpsFile.getConfigurationSection("warps").getKeys(false);
+                return new ArrayList<>(Warps);
+            }
+
             if(args.length == 3 && args[0].equalsIgnoreCase("manage")){
-                return Arrays.asList("setguislot", "setguiitem", "setguititle","setperm", "setenchantglint", "setlocation", "setworld");
+                boolean togglePermissions = plugin.getConfig().getBoolean("toggle-permissions");
+                if(!togglePermissions){ //Returns tabs without 'setperm' if the permissions are not toggled
+                    return Arrays.asList("setguislot", "setguiitem", "setguititle", "setenchantglint", "setlocation", "setworld");
+                }
+                return Arrays.asList("setguislot", "setguiitem", "setguititle", "setperm", "setenchantglint", "setlocation", "setworld");
             }
             if(args.length == 4 && args[2].equalsIgnoreCase("setenchantglint")){
                 return Arrays.asList("true", "false");

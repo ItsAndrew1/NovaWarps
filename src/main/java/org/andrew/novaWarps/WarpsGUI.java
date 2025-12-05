@@ -2,6 +2,7 @@
 package org.andrew.novaWarps;
 
 import org.bukkit.*;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -12,15 +13,14 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 public class WarpsGUI implements Listener {
-    NovaWarps plugin;
-    BukkitRunnable task;
+    private final NovaWarps plugin;
 
     public WarpsGUI(NovaWarps plugin){
         this.plugin = plugin;
@@ -32,28 +32,81 @@ public class WarpsGUI implements Listener {
         String chatPrefix = plugin.getConfig().getString("prefix");
         String stringOpenSound = plugin.getConfig().getString("open-warps-gui-sound").toLowerCase();
         String guiTitle = ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("gui-title")));
-        boolean exitItemToggle = plugin.getConfig().getBoolean("exit-item.toggle");
+        boolean exitItemToggle = plugin.getConfig().getBoolean("gui-exit-item.toggle");
 
         //If there aren't any warps configured, sends a message to the player
-        if(!warps.isConfigurationSection("warps")){
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', chatPrefix+" &cThere are no warps configured. Contact the server administrators about this!"));
+        ConfigurationSection warpSection = warps.getConfigurationSection("warps");
+        if(warpSection == null || warpSection.getKeys(false).isEmpty()){
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cThere are no warps configured. Contact the server administrators about this!"));
+
+            Sound noWarps = Registry.SOUNDS.get(NamespacedKey.minecraft(plugin.getConfig().getString("no-warps-sound").toLowerCase()));
+            float nwsVolume = plugin.getConfig().getInt("nws-volume");
+            float nwsPitch = plugin.getConfig().getInt("nws-pitch");
+            player.playSound(player.getLocation(), noWarps, nwsVolume, nwsPitch);
             return;
         }
 
-        Inventory gui = Bukkit.createInventory(null, plugin.getGuiSize(), guiTitle);
+        Inventory hintsGui = Bukkit.createInventory(null, plugin.getGuiSize(), guiTitle); //Creates the GUI
 
-        //Shows the exitItem if exit-item.toggle is true
+        //Displays decorations (if they are toggled)
+        boolean toggleDecorations = plugin.getConfig().getBoolean("gui-toggle-decorations");
+        boolean toggleInfoItem = plugin.getConfig().getBoolean("gui-info-item.toggle");
+        if(toggleDecorations){
+            String stringDecorationItem = plugin.getConfig().getString("gui-decoration-item.material").toUpperCase();
+            String diDisplayName = plugin.getConfig().getString("gui-decoration-item.display-name");
+            ItemStack decorationItem = new ItemStack(Material.matchMaterial(stringDecorationItem));
+            ItemMeta diMeta = decorationItem.getItemMeta();
+
+            for(int i = 0; i<=8; i++){
+                if(toggleInfoItem){ //Skips the slot 4 if the info item is toggled
+                    if(i == 4) continue;
+                }
+
+                if(diDisplayName != null) diMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', diDisplayName));
+                decorationItem.setItemMeta(diMeta);
+                hintsGui.setItem(i, decorationItem);
+            }
+
+            for(int i = 45; i<=53; i++){
+                if(diDisplayName != null) diMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', diDisplayName));
+                decorationItem.setItemMeta(diMeta);
+                hintsGui.setItem(i, decorationItem);
+            }
+        }
+
+        //Shows the info item if it is toggled
+        if(toggleInfoItem){
+            String iiDisplayName = plugin.getConfig().getString("gui-info-item.display-name");
+            String iiStringMaterial = plugin.getConfig().getString("gui-info-item.material").toUpperCase();
+            ItemStack infoItem = new ItemStack(Material.matchMaterial(iiStringMaterial));
+            ItemMeta iiMeta = infoItem.getItemMeta();
+
+            //Sets the lore
+            if(plugin.getConfig().getStringList("gui-info-item.lore").isEmpty()) iiMeta.setLore(Collections.emptyList()); //Checks if there is any lore
+            List<String> coloredLore = new ArrayList<>();
+            for(String loreLine : plugin.getConfig().getStringList("gui-info-item.lore")){
+                String coloredLoreLine = ChatColor.translateAlternateColorCodes('&', loreLine);
+                coloredLore.add(coloredLoreLine);
+            }
+            iiMeta.setLore(coloredLore);
+
+            iiMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', iiDisplayName));
+            infoItem.setItemMeta(iiMeta);
+            hintsGui.setItem(4, infoItem);
+        }
+
+        //Shows the exitItem if it is toggled
         if(exitItemToggle){
-            String stringExitItemMaterial = plugin.getConfig().getString("exit-item.material");
+            String stringExitItemMaterial = plugin.getConfig().getString("gui-exit-item.material");
             Material exitItemMaterial = Material.matchMaterial(stringExitItemMaterial.toUpperCase());
             ItemStack exitItem = new ItemStack(exitItemMaterial);
             ItemMeta exitItemMeta = exitItem.getItemMeta();
 
-            exitItemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("exit-item.display-name"))));
+            exitItemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("gui-exit-item.display-name"))));
             exitItem.setItemMeta(exitItemMeta);
 
-            int exitItemSlot = plugin.getConfig().getInt("exit-item.slot");
-            gui.setItem(exitItemSlot, exitItem);
+            int exitItemSlot = plugin.getConfig().getInt("gui-exit-item.slot");
+            hintsGui.setItem(exitItemSlot, exitItem);
         }
 
         try{
@@ -89,35 +142,23 @@ public class WarpsGUI implements Listener {
                 guiWarpMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', guiWarpTitle));
 
                 if(togglePermissions){
-                    //Sets the lore for players with and without permission to use a specific warp
-                    if(!player.hasPermission("warps."+warp+".permission")){
-                        List<String> coloredLore = new ArrayList<>();
-                        for(String rawLoreLine : warps.getStringList("warps."+warp+".lore")){
-                            coloredLore.add(ChatColor.translateAlternateColorCodes('&', rawLoreLine));
-                        }
-                        coloredLore.add("");
-                        coloredLore.add(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("no-permission-lore"))));
-                        guiWarpMeta.setLore(coloredLore);
+                    //Sets the lore of each warp
+                    List<String> coloredLore = new ArrayList<>();
+                    for(String rawLoreLine : warps.getStringList("warps."+warp+".lore")){
+                        coloredLore.add(ChatColor.translateAlternateColorCodes('&', rawLoreLine));
                     }
-                    else{
-                        List<String> coloredLore = new ArrayList<>();
-                        for(String rawLoreLine : warps.getStringList("warps."+warp+".lore")){
-                            coloredLore.add(ChatColor.translateAlternateColorCodes('&', rawLoreLine));
-                        }
-                        guiWarpMeta.setLore(coloredLore);
-                    }
+                    guiWarpMeta.setLore(coloredLore);
                 }
 
                 guiWarp.setItemMeta(guiWarpMeta);
-                gui.setItem(guiWarpSlot, guiWarp);
+                hintsGui.setItem(guiWarpSlot, guiWarp);
             }
-          //Displays any errors in the server console
-        } catch (Exception e){
+        } catch (Exception e){ //Displays any errors in the server console
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cError! Contact the server administrators about this."));
             Bukkit.getLogger().warning(e.getMessage());
             return;
         }
-        player.openInventory(gui);
+        player.openInventory(hintsGui);
     }
 
     //Handles any click in the GUI made by a player
@@ -134,8 +175,16 @@ public class WarpsGUI implements Listener {
 
         event.setCancelled(true); //Doesn't let the player take any items
 
-        //Exit button
-        String exitItemString = plugin.getConfig().getString("exit-item.material").toUpperCase();
+        //If the player clicks on info item
+        Material infoItemMaterial = Material.matchMaterial(plugin.getConfig().getString("gui-info-item.material").toUpperCase());
+        if(clicked.getType() == infoItemMaterial) return;
+
+        //If the player clicks on a decoration item
+        Material decorationItemMaterial = Material.matchMaterial(plugin.getConfig().getString("gui-decoration-item.material").toUpperCase());
+        if(clicked.getType() == decorationItemMaterial) return;
+
+        //If the player clicks on exit button
+        String exitItemString = plugin.getConfig().getString("gui-exit-item.material").toUpperCase();
         Material exitItemMaterial = Material.matchMaterial(exitItemString);
         if(clicked.getType() == exitItemMaterial){
             String exitButtonSoundString = plugin.getConfig().getString("exit-button-sound");
@@ -148,157 +197,6 @@ public class WarpsGUI implements Listener {
             player.closeInventory();
         }
 
-        FileConfiguration warps = plugin.getWarps().getConfig();
-
-        for(String warp : warps.getConfigurationSection("warps").getKeys(false)){
-            String mainPath = "warps."+warp;
-            double locationX = warps.getInt(mainPath+".location.x");
-            double locationY = warps.getInt(mainPath+".location.y");
-            double locationZ = warps.getInt(mainPath+".location.z");
-
-            String warpMaterialString = warps.getString(mainPath+".gui-item").toUpperCase();
-            Material warpMaterial = Material.matchMaterial(warpMaterialString);
-
-            if(clicked.getType() == warpMaterial){
-                player.closeInventory();
-
-                double playerX = player.getLocation().getX();
-                double playerY = player.getLocation().getY();
-                double playerZ = player.getLocation().getZ();
-
-                String playerPermission = warps.getString(mainPath+".permission");
-                boolean togglePermissions = plugin.getConfig().getBoolean("toggle-permissions");
-                boolean toggleCooldowns = plugin.getConfig().getBoolean("toggle-cooldowns");
-
-                //Check for player's permission if togglePermissions is true
-                if(togglePermissions){
-                    if(!player.hasPermission(playerPermission)){
-                        //Setting the values and strings for the sound
-                        String noPermissionSoundString = plugin.getConfig().getString("no-permission-sound");
-                        String noPermissionChatMessage = plugin.getConfig().getString("no-permission-chat-message");
-                        float noPermissionSoundVolume = plugin.getConfig().getInt("no-permission-sound-volume");
-                        float noPermissionSoundPitch = plugin.getConfig().getInt("no-permission-sound-volume");
-                        NamespacedKey checkNoPermissionSound = NamespacedKey.minecraft(noPermissionSoundString);
-                        Sound noPermissionSound = Registry.SOUNDS.get(checkNoPermissionSound);
-
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', noPermissionChatMessage));
-                        player.playSound(player.getLocation(), noPermissionSound, noPermissionSoundVolume, noPermissionSoundPitch);
-                        player.closeInventory();
-                        return;
-                    }
-                }
-
-                //Check if the player has cooldown if toggleCooldowns is true
-                if(toggleCooldowns){
-                    if(plugin.getCooldownManager().playerHasCooldown(player)){
-                        long remainingCooldown = plugin.getCooldownManager().getRemainingCooldown(player);
-                        String remainingCooldownString = formatCooldown(remainingCooldown);
-
-                        String playerHasCooldownSoundString = plugin.getConfig().getString("player-has-cooldown-sound");
-                        float playerHasCooldownSoundVolume = plugin.getConfig().getInt("player-has-cooldown-sound-volume");
-                        float playerHasCooldownSoundPitch = plugin.getConfig().getInt("player-has-cooldown-sound-pitch");
-                        NamespacedKey checkPlayerHasCooldownSound = NamespacedKey.minecraft(playerHasCooldownSoundString.toLowerCase());
-                        Sound playerHasCooldownSound = Registry.SOUNDS.get(checkPlayerHasCooldownSound);
-
-                        player.playSound(player.getLocation(), playerHasCooldownSound, playerHasCooldownSoundVolume, playerHasCooldownSoundPitch);
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou still have a cooldown of &l"+remainingCooldownString+"&c!"));
-                        player.closeInventory();
-                        return;
-                    }
-                }
-
-                final int[] second = {plugin.getConfig().getInt("task-timer")};
-                task = new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        if(isMoving(player, playerX, playerY, playerZ)){
-                            String playerMovedTitle = ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("player-moved-title")));
-                            String playerMovedSubtitle = ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("player-moved-subtitle")));
-                            String playerMovedChatMessage = ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("player-moved-message")));
-
-                            float PlayerMovedSoundVolume = plugin.getConfig().getInt("player-moved-sound-volume");
-                            float PlayerMovedSoundPitch = plugin.getConfig().getInt("player-moved-sound-pitch");
-                            String playerMovedSoundString = plugin.getConfig().getString("player-moved-sound");
-                            NamespacedKey checkPlayerMovedSound = NamespacedKey.minecraft(playerMovedSoundString.toLowerCase());
-                            Sound truePlayerMovedSound = Registry.SOUNDS.get(checkPlayerMovedSound);
-
-                            player.sendTitle(playerMovedTitle, playerMovedSubtitle);
-                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', playerMovedChatMessage));
-                            player.playSound(player.getLocation(), truePlayerMovedSound, PlayerMovedSoundVolume, PlayerMovedSoundPitch);
-
-                            task.cancel();
-                            return;
-                        }
-
-                        String titleStyle = plugin.getConfig().getString("task-active-title-style");
-                        String subtitle = plugin.getConfig().getString("task-active-subtitle");
-
-                        String taskActiveSound = plugin.getConfig().getString("task-in-progress-sound").toLowerCase();
-                        float taskActiveSoundVolume = plugin.getConfig().getInt("task-in-progress-sound-volume");
-                        float taskActiveSoundPitch = plugin.getConfig().getInt("task-in-progress-sound-pitch");
-                        NamespacedKey checkTaskActiveSound = NamespacedKey.minecraft(taskActiveSound);
-                        Sound trueTaskActiveSound = Registry.SOUNDS.get(checkTaskActiveSound);
-
-                        //If the second is 0
-                        if(second[0] == 0){
-                            World world = Bukkit.getWorld(Objects.requireNonNull(warps.getString(mainPath + ".world")));
-                            if(world == null){
-                                Bukkit.getLogger().info("[NW] World invalid for warp "+warp+"!");
-                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cThere is a problem. Contact the server administrators about this"));
-                                return;
-                            }
-
-                            //Starts the cooldown if 'toggle-cooldowns' is true
-                            if(toggleCooldowns){
-                                plugin.getCooldownManager().startCooldown(player);
-                            }
-
-                            //Information for the sound of playerWarped
-                            String playerWarpedSoundString = plugin.getConfig().getString("player-warped-sound");
-                            float playerWarpedSoundVolume = plugin.getConfig().getInt("player-warped-sound-volume");
-                            float playerWarpedSoundPitch = plugin.getConfig().getInt("player-warped-sound-pitch");
-                            NamespacedKey checkPlayerWarpedSound = NamespacedKey.minecraft(playerWarpedSoundString.toLowerCase());
-                            Sound playerWarpedSound = Registry.SOUNDS.get(checkPlayerWarpedSound);
-
-                            Location teleportLocation = new Location(world, locationX, locationY, locationZ);
-                            player.playSound(player.getLocation(), playerWarpedSound, playerWarpedSoundVolume, playerWarpedSoundPitch);
-                            player.sendTitle(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("player-warped-title"))),"");
-                            player.teleport(teleportLocation);
-                            task.cancel();
-                            return;
-                        }
-                        player.sendTitle(ChatColor.translateAlternateColorCodes('&', titleStyle+ second[0]), ChatColor.translateAlternateColorCodes('&', subtitle));
-                        player.playSound(player.getLocation(), trueTaskActiveSound, taskActiveSoundVolume, taskActiveSoundPitch);
-                        second[0]--;
-                    }
-                };
-                task.runTaskTimer(plugin, 0L, 20L);
-            }
-        }
-    }
-
-    //Check if the player is standing still
-    public boolean isMoving(Player player, double x, double y, double z){
-        double playerX = player.getLocation().getX();
-        double playerY = player.getLocation().getY();
-        double playerZ = player.getLocation().getZ();
-
-        return playerX != x || playerY != y || playerZ != z;
-    }
-
-    //Creates the string of characters needed for displaying the remaining cooldown
-    public String formatCooldown(long seconds){
-        long days = seconds/86400;
-        long hours = seconds/3600;
-        long minutes = seconds/60;
-        long secs = seconds%60;
-
-        StringBuilder displayCooldown = new StringBuilder();
-        if(days > 0) displayCooldown.append(days).append("d ");
-        if(days > 0 || hours > 0) displayCooldown.append(hours).append("h ");
-        if(days > 0 || hours > 0 || minutes > 0) displayCooldown.append(minutes).append("m ");
-        displayCooldown.append(secs).append("s ");
-
-        return displayCooldown.toString().trim();
+        plugin.getWarpTask().startTask(player, clicked); //Starts the task
     }
 }

@@ -28,7 +28,7 @@ public class CooldownManager {
                 cooldownFromConfig = parseCooldown(warpCooldown);
             } catch (Exception e){
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("prefix") + " &cThere was an error. Contact the server administrators about this."));
-                Bukkit.getLogger().warning("[NW] There is something wrong with the cooldown in config.yml!");
+                Bukkit.getLogger().warning("[NOVAWARPS] There is something wrong with the cooldown in config.yml!");
                 Bukkit.getLogger().warning(e.getMessage());
                 return;
             }
@@ -36,6 +36,10 @@ public class CooldownManager {
             long rawCooldown =System.currentTimeMillis() / 1000 + cooldownFromConfig;
             String pathToSet = "players."+player.getName()+".cooldown";
             playerData.set(pathToSet, rawCooldown);
+            plugin.getPlayerData().saveConfig();
+        }
+        else{
+            playerData.set("players."+player.getName(), null);
             plugin.getPlayerData().saveConfig();
         }
     }

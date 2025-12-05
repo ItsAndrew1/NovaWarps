@@ -2,14 +2,47 @@
 #This is the main config for NovaWarps
 
 prefix: "&5&l[&b&lNW&5&l]" #This is the main prefix that appears in chat
+
 toggle-permissions: true #Whether you want to use permissions for warps or not (true/false)
 toggle-cooldowns: true #Whether you want to have a cooldown after a player warps (true/false)
+
+#WARP TASK configuration
+task-active-title-style: "&a&l" #This is only for style!! The title will be the seconds left to run the task
+task-active-subtitle: "&c&lDO NOT MOVE!"
+
+player-moved-title: "&cWARP CANCELED!"
+player-moved-subtitle: ""
+player-moved-message: " &cYou moved! Do &l/warps &cand try again!"
+player-warped-title: "&a&lWarped Successfully!"
+player-warped-successfully-message: " &aWarped successfully!"
+
+no-permission-chat-message: "&cYou don't have permission to use this warp!"
+no-permission-lore: "&c&lNO PERMISSION" #This is the lore that appears on a warp item if the player doesn't have permission
+
+toggle-firework: true #true(yes) / false(no)
+firework-main-color: "#f5b505" #Use HEX VALUES!
+firework-secondary-color: "#000000" #Use HEX VALUES!
+
 cooldown: 5m #s-seconds; m-minutes; h-hours; d-days
+task-timer: 5 #seconds
 
 #GUI Configuration
 gui-rows: 6 #The number should be between 1 and 6 (each inventory row has 9 slots => minimum slots = 9; maximum slots = 54)
 gui-title: "Warps" #You can use '&' styles
-exit-item:
+gui-toggle-decorations: true #true(yes) / false(no)
+
+gui-decoration-item:
+  material: black_stained_glass_pane
+  display-name: " " #Use '&' for styles
+
+gui-info-item:
+  toggle: true
+  material: oak_sign
+  display-name: "&fChoose a warp!" #Use '&' for styles
+  lore: #Leave blank for no lore
+    -
+
+gui-exit-item:
   toggle: true #If you want this button in the GUI or not (true/false)
   material: red_concrete #In minecraft, hover over an item, and you will see "minecraft:..." You need to write what's after "minecraft:"
   slot: 40
@@ -20,12 +53,14 @@ exit-item:
 no-permission-sound: "entity.villager.no"
 no-permission-sound-volume: 1
 no-permission-sound-pitch: 1
-no-permission-chat-message: "&cYou don't have permission to use this warp!"
-no-permission-lore: "&c&lNO PERMISSION" #This is the lore that appears on a warp item if the player doesn't have permission
 
 open-warps-gui-sound: "entity.experience_orb.pickup"
 open-warps-gui-sound-volume: 1
 open-warps-gui-sound-pitch: 1
+
+no-warps-sound: "entity.enderman.teleport"
+nws-volume: 1
+nws-pitch: 1
 
 player-has-cooldown-sound: "entity.villager.no"
 player-has-cooldown-sound-volume: 1
@@ -46,18 +81,6 @@ exit-button-sound-pitch: 1
 player-warped-sound: "entity.wither.ambient"
 player-warped-sound-volume: 1
 player-warped-sound-pitch: 0.4
-player-warped-title: "&a&lWarped Successfully!"
-player-warped-successfully-message: " &aWarped successfully!"
-
-#Configure everything during the WARP TASK
-task-active-title-style: "&a&l" #This is only for style, the title will be the seconds left to run the task
-task-active-subtitle: "&c&lDO NOT MOVE!"
-
-player-moved-title: "&cWARP CANCELED!"
-player-moved-subtitle: ""
-player-moved-message: " &cYou moved! Do &l/warps &cand try again!"
-
-task-timer: 5 #seconds
 
 #HELP MESSAGE when a staff runs /warpconfig help
 help-message:
