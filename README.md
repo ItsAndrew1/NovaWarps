@@ -1,16 +1,19 @@
+<img width="1536" height="1024" alt="NovaWarps Banner" src="https://github.com/user-attachments/assets/640e4a40-7579-4a3a-832d-b096826bded8" />
+
 **NovaWarps v1.0** is a lightweight warps plugin designed to help server owners create and customize warps.  
 The plugin is **plug-and-play** style, meaning that you put the `.jar` in `plugins` folder and runs perfectly.
 
 ---
 
 ## ⚙️ Features
- - Customizable GUI for players
+ - Customizable interactive GUI for players
  - Customizable sounds
  - Cooldowns for warping
- - Permissions for each warp  
+ - Customizable special effects
+ - Optional permissions for each warp
 **And much more!** 
 #### 🔴 About PERMISSIONS:
-- It is advised to have a *permission plugin* on your server, such as **LuckPerms**. Otherwise, the plugin will still work **WITHOUT** permissions.
+- It is advised to have a *permission plugin* on your server, such as **LuckPerms**. Otherwise, the plugin will still work but **WITHOUT** permissions.
 - If you use **LuckPerms**, you can use this command:
  ```
  /lp group <group> permission set <permission> true
@@ -29,25 +32,25 @@ The plugin is **plug-and-play** style, meaning that you put the `.jar` in `plugi
 | `/warpconfig manage <name> ...` | Helps *managing* all the warps available | `warps.admin` |
 | `/warps`                        | Opens the warps GUI                      | `warps.use`   |
 
-**🔴Quick Tip:** You can use */wc* instead of */warpconfig* for faster inputs.
+**🔴 Quick Tip:** You can use */wc* instead of */warpconfig* for faster inputs.
 
 ---
 
 ## 📁Configuration Files
 NovaWarps uses **3 .yml files**, each with it's own use. Here is what each file is for:
 - **config.yml** contains all the configurable settings about the plugin, such as:
-  - Configuring the Warps GUI
-  - Configuring all the sounds that the plugin uses
-  - Configure the *warp iteself*  
+  - Configuring the *Warps GUI*
+  - Configuring all the *sounds* that the plugin uses
+  - Configure the *warp task iteself*  
   And **more**.
 - **playerData.yml** contains each player's cooldowns. It is best *not to modify anything*!
 - **warps.yml** contains each warp you create and configure.
 
-**🔴 Quick Tip:** Always run */warpconfig reload* after making a change in any `.yml file`.
+**🔴 Quick Tip:** Always run */warpconfig reload* after making a change in any `.yml file` manually!
 
 ---
 
 ## ❤️Credits
-NovaWarps is being developed by **\_ItsAndrew_**.  
+NovaWarps is being actively developed by **\_ItsAndrew_**.  
 Special thanks to anyone who *contributes*, *helps* and *gives feedback*!  
-If you encounter bugs, please open up an [issue](https://github.com/ItsAndrew1/NovaWarps/issues) or DM me on discord: **\_ItsAndrew_**
+If you encounter bugs, please open up an [issue](https://github.com/ItsAndrew1/NovaWarps/issues) or DM me on discord: **\_ItsAndrew_**. It helps me very much!
