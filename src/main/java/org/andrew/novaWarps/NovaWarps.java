@@ -33,13 +33,13 @@ public final class NovaWarps extends JavaPlugin {
         //Checking several conditions
         guiSize = getConfig().getInt("gui-rows") * 9;
         if(getConfig().getInt("gui-rows") < 1 || getConfig().getInt("gui-rows") > 6){
-            Bukkit.getLogger().warning("[NW] The gui-rows in config.yml is invalid! The value must be between 1 and 6!");
+            Bukkit.getLogger().warning("[NOVAWARPS] The gui-rows in config.yml is invalid! The value must be between 1 and 6!");
         }
 
         //Checking if everything is ok for EXIT-ITEM
         String stringExitButtonToggle = getConfig().getString("exit-item.toggle");
         if(!stringExitButtonToggle.equalsIgnoreCase("true") && !stringExitButtonToggle.equalsIgnoreCase("false")){
-            Bukkit.getLogger().warning("[NW] Invalid value for exit-item.toggle in config.yml! The value must be true/false!");
+            Bukkit.getLogger().warning("[NOVAWARPS] Invalid value for exit-item.toggle in config.yml! The value must be true/false!");
         }
         else{
             boolean exitButtonToggle = getConfig().getBoolean("exit-item.toggle");
@@ -47,14 +47,14 @@ public final class NovaWarps extends JavaPlugin {
                 //Check if the slot is valid
                 int exitButtonSlot = getConfig().getInt("exit-item.slot");
                 if(exitButtonSlot < 1 || exitButtonSlot > getGuiSize()){
-                    Bukkit.getLogger().warning("[NW] The exit button's slot must be between 1 and "+getGuiSize());
+                    Bukkit.getLogger().warning("[NOVAWARPS] The exit button's slot must be between 1 and "+getGuiSize());
                 }
 
                 //Check if the material is valid
                 String stringExitButtonMaterial = getConfig().getString("exit-item.material");
                 Material exitButtonMaterial = Material.matchMaterial(stringExitButtonMaterial.toUpperCase());
                 if(exitButtonMaterial == null){
-                    Bukkit.getLogger().warning("[NW] The material for exit button does not exist!");
+                    Bukkit.getLogger().warning("[NOVAWARPS] The material for exit button does not exist!");
                 }
 
                 //Check if the sound is valid
@@ -63,7 +63,7 @@ public final class NovaWarps extends JavaPlugin {
                     NamespacedKey checkSound = NamespacedKey.minecraft(exitButtonSoundString.toLowerCase());
                     Sound trueExitButtonSound = Registry.SOUNDS.get(checkSound);
                     if(trueExitButtonSound == null){
-                        Bukkit.getLogger().warning("[NW] The value for exit-button-sound in config.yml is invalid!");
+                        Bukkit.getLogger().warning("[NOVAWARPS] The value for exit-button-sound in config.yml is invalid!");
                     }
                 }
             }
@@ -78,7 +78,7 @@ public final class NovaWarps extends JavaPlugin {
         getWarps().saveConfig();
         playerData.saveConfig();
 
-        Bukkit.getLogger().info("[NW] NovaWarps disabled successfully!");
+        Bukkit.getLogger().info("[NOVAWARPS] NovaWarps disabled successfully!");
     }
 
     //Getters

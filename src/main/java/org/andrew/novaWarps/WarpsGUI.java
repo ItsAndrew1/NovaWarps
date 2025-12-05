@@ -113,7 +113,7 @@ public class WarpsGUI implements Listener {
             }
           //Displays any errors in the server console
         } catch (Exception e){
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', chatPrefix+" &cError! Contact the server administrators about this."));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cError! Contact the server administrators about this."));
             Bukkit.getLogger().warning(e.getMessage());
             return;
         }
@@ -132,6 +132,8 @@ public class WarpsGUI implements Listener {
         ItemStack clicked = event.getCurrentItem();
         if(clicked == null || clicked.getType() == Material.AIR) return;
 
+        event.setCancelled(true); //Doesn't let the player take any items
+
         //Exit button
         String exitItemString = plugin.getConfig().getString("exit-item.material").toUpperCase();
         Material exitItemMaterial = Material.matchMaterial(exitItemString);
@@ -147,7 +149,6 @@ public class WarpsGUI implements Listener {
         }
 
         FileConfiguration warps = plugin.getWarps().getConfig();
-        String prefix = plugin.getConfig().getString("prefix");
 
         for(String warp : warps.getConfigurationSection("warps").getKeys(false)){
             String mainPath = "warps."+warp;
