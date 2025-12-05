@@ -1,7 +1,9 @@
 <img width="1536" height="1024" alt="NovaWarps Banner" src="https://github.com/user-attachments/assets/640e4a40-7579-4a3a-832d-b096826bded8" />
 
-**NovaWarps v1.0** is a lightweight warps plugin designed to help server owners create and customize warps.  
+**NovaWarps v1.1** is a lightweight warps plugin designed to help server owners create and customize warps.  
 The plugin is **plug-and-play** style, meaning that you put the `.jar` in `plugins` folder and runs perfectly.
+
+**🔴 New Release!** Check out *version 1.1* [here](https://github.com/ItsAndrew1/NovaWarps/releases/tag/v1.1)!
 
 ---
 
@@ -10,7 +12,7 @@ The plugin is **plug-and-play** style, meaning that you put the `.jar` in `plugi
  - Customizable sounds
  - Cooldowns for warping
  - Customizable special effects
- - Optional permissions for each warp
+ - Optional permissions for each warp  
 **And much more!** 
 #### 🔴 About PERMISSIONS:
 - It is advised to have a *permission plugin* on your server, such as **LuckPerms**. Otherwise, the plugin will still work but **WITHOUT** permissions.
