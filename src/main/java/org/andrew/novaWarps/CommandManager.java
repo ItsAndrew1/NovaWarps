@@ -36,6 +36,12 @@ public class CommandManager implements CommandExecutor {
                 return true;
             }
 
+            if(args.length < 1){
+                player.playSound(player.getLocation(), bad, 1f, 1f);
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix +" &cUsage: &l/warpconfig <create | delete | help | manage | reload>"));
+                return true;
+            }
+
             switch(args[0]){
                 case "create":
                     if(args.length < 2){

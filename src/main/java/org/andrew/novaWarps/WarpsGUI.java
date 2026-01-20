@@ -139,7 +139,7 @@ public class WarpsGUI implements Listener {
                 }
 
                 String guiWarpTitle = ChatColor.translateAlternateColorCodes('&', warps.getString("warps."+warp+".gui-title"));
-                guiWarpMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', guiWarpTitle));
+                guiWarpMeta.setDisplayName(guiWarpTitle);
 
                 if(togglePermissions){
                     //Sets the lore of each warp
