@@ -110,7 +110,7 @@ public class WarpsGUI implements Listener {
         }
 
         try{
-            boolean togglePermissions = plugin.getConfig().getBoolean("toggle-permissions");
+            boolean togglePermissions = plugin.getConfig().getBoolean("toggle-permissions", false);
 
             NamespacedKey soundName = NamespacedKey.minecraft(stringOpenSound.toLowerCase());
             Sound trueOpenSound = Registry.SOUNDS.get(soundName);
@@ -147,10 +147,15 @@ public class WarpsGUI implements Listener {
                     coloredLore.add(ChatColor.translateAlternateColorCodes('&', rawLoreLine));
                 }
 
-                if(togglePermissions && ){
-
+                //Adds the 'No Permission' Lore if the player doesn't have the necessary permission
+                String permission = warps.getString("warps."+warp+".permission");
+                if(togglePermissions && !plugin.getPermissions().playerHas(player, permission)){
+                    String noPermission = plugin.getConfig().getString("no-permission-lore");
+                    coloredLore.add(" ");
+                    coloredLore.add(ChatColor.translateAlternateColorCodes('&', noPermission));
                 }
 
+                guiWarpMeta.setLore(coloredLore);
                 guiWarp.setItemMeta(guiWarpMeta);
                 hintsGui.setItem(guiWarpSlot, guiWarp);
             }

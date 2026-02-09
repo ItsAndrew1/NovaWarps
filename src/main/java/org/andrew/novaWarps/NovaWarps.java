@@ -153,4 +153,9 @@ public final class NovaWarps extends JavaPlugin {
     public WarpTaskManager getWarpTask(){
         return warpTask;
     }
+
+    //Getter for permission object
+    public Permission getPermissions(){
+        return permissions;
+    }
 }
