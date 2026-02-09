@@ -141,13 +141,14 @@ public class WarpsGUI implements Listener {
                 String guiWarpTitle = ChatColor.translateAlternateColorCodes('&', warps.getString("warps."+warp+".gui-title"));
                 guiWarpMeta.setDisplayName(guiWarpTitle);
 
-                if(togglePermissions){
-                    //Sets the lore of each warp
-                    List<String> coloredLore = new ArrayList<>();
-                    for(String rawLoreLine : warps.getStringList("warps."+warp+".lore")){
-                        coloredLore.add(ChatColor.translateAlternateColorCodes('&', rawLoreLine));
-                    }
-                    guiWarpMeta.setLore(coloredLore);
+                //Sets the lore of each warp
+                List<String> coloredLore = new ArrayList<>();
+                for(String rawLoreLine : warps.getStringList("warps."+warp+".lore")){
+                    coloredLore.add(ChatColor.translateAlternateColorCodes('&', rawLoreLine));
+                }
+
+                if(togglePermissions && ){
+
                 }
 
                 guiWarp.setItemMeta(guiWarpMeta);

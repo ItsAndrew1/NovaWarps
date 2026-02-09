@@ -3,7 +3,10 @@
 
 prefix: "&5&l[&b&lNW&5&l]" #This is the main prefix that appears in chat
 
-toggle-permissions: true #Whether you want to use permissions for warps or not (true/false)
+#Whether you want to use permissions for warps or not (true/false)
+#For this, you will need the 'Vault' plugin and another Permissions Plugin (e.g: LuckPerms)
+toggle-permissions: true
+
 toggle-cooldowns: true #Whether you want to have a cooldown after a player warps (true/false)
 
 #WARP TASK configuration

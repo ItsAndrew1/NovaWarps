@@ -1,9 +1,10 @@
 //Developed by _ItsAndrew_
 package org.andrew.novaWarps;
 
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.*;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.checkerframework.checker.units.qual.C;
 
 public final class NovaWarps extends JavaPlugin {
     private YMLfiles warps;
@@ -12,6 +13,9 @@ public final class NovaWarps extends JavaPlugin {
     private WarpsGUI guiManager;
     private CooldownManager cooldownManager;
     private WarpTaskManager warpTask;
+
+    //Defining the Permission object
+    private static Permission permissions;
 
     @Override
     public void onEnable() {
@@ -103,6 +107,21 @@ public final class NovaWarps extends JavaPlugin {
         } catch (Exception e){
             Bukkit.getLogger().warning("[NOVAWARPS] The value of toggle-firework is invalid!");
         }
+
+        //Sets the permission object
+        setupPermission();
+    }
+
+    private void setupPermission(){
+        boolean togglePermissions = getConfig().getBoolean("toggle-permissions", true);
+        if(!togglePermissions) return;
+
+        if(getServer().getPluginManager().getPlugin("Vault") == null){
+            getLogger().severe("[NOVAWARPS] The 'toggle-permissions' is true but you don't have the 'Vault' plugin installed!");
+            return;
+        }
+        RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(Permission.class);
+        permissions = permissionProvider.getProvider();
     }
 
     @Override

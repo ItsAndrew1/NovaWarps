@@ -4,6 +4,8 @@ main: org.andrew.novaWarps.NovaWarps
 api-version: '1.21'
 author: _ItsAndrew_
 description: Create different warps for your server!
+softdepend:
+  - Vault
 
 permissions:
   warps.admin:
